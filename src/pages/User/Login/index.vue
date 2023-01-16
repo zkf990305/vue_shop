@@ -3,7 +3,7 @@
         <div class="login_box">
             <!-- 头像区域 -->
             <div class="avatar_box">
-                <img src="../assets/logo.png" alt="" />
+                <img src="../../../assets/logo.png" alt="" />
             </div>
             <!-- 登录表单区域 -->
             <el-form
@@ -46,44 +46,15 @@
 </template>
 
 <script>
+import { userLoginFormRulesMixin } from '../../../common/mixin'
 export default {
+    mixins: [userLoginFormRulesMixin],
     data() {
         return {
             // 这是登录表单的数据绑定对象
             loginForm: {
-                username: 'zs',
+                username: 'admin',
                 password: '123456',
-            },
-            // 这是表单的验证规则对象
-            loginFormRules: {
-                // 验证用户名是否合法
-                username: [
-                    {
-                        required: true,
-                        message: '请输入登录名称',
-                        trigger: 'blur',
-                    },
-                    {
-                        min: 3,
-                        max: 10,
-                        message: '长度在 3 到 10 个字符',
-                        trigger: 'blur',
-                    },
-                ],
-                // 验证密码是否合法
-                password: [
-                    {
-                        required: true,
-                        message: '请输入登录密码',
-                        trigger: 'blur',
-                    },
-                    {
-                        min: 6,
-                        max: 15,
-                        message: '长度在 6 到 15 个字符',
-                        trigger: 'blur',
-                    },
-                ],
             },
         }
     },
