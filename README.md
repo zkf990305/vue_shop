@@ -148,24 +148,59 @@ axios.interceptors.request.use((config) => {
 })
 ```
 
-
-
 ## 组件分出
 
 父子组件通信：
 
 [子组件修改父组件的值](https://blog.csdn.net/Antonweb/article/details/104027512)
 
-
-
 ## 验证规则对象
 
-> 统一写在一个 common/mixin.js文件中。
+> 统一写在一个 common/mixin.js 文件中。
 
 ```js
 import { userFormRules } from '../../../../common/mixin'
 export default {
-    mixins: [userFormRules],
+  mixins: [userFormRules],
 }
+```
+
+## 出现问题及解决
+
+1. Cascader 级联选择器
+
+options 属性指定选项数组数据量过大，占满全屏
+
+​	->> 全局样式添加：`.el-cascader-panel {height: 250px;}`
+
+2. Table 表格
+
+【商品分类】：树形数据与懒加载，自定义 `type=index` 列的行号，项目只需要第一层行号出现索引，第二层、第三层不需要，第一层唯一id `row-key="cat_id"`顺序间隔不同，索引列出现小问题。
+
+ <u>索引： (当前页码 - 1) * 每页显示条数 + 该行数据在数组的下标 + 1</u> 
+
+```js
+<el-table
+    :data="cateList"
+    stripe
+    border
+    style="width: 100%"
+    row-key="cat_id"
+    :tree-props="{
+    children: 'children',
+        hasChildren: 'hasChildren',
+    }"
+>
+        <el-table-column type="index" label="#" width="50">
+            <template slot-scope="scope">
+                <!-- 第一层展示索引 -->
+                <span v-if="scope.row.cat_level === 0">
+                    <!-- 索引： (当前页码 - 1) * 每页显示条数 + 该行数据在数组的下标 + 1 -->
+                    {{ (queryInfo.pagenum - 1) * queryInfo.pagesize 
+                        + cateList.indexOf(scope.row) +  1 }}
+                 </span>
+    </template>
+    </el-table-column>
+</el-table>
 ```
 
