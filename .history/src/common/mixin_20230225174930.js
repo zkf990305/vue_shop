@@ -205,7 +205,6 @@ export const cateAddFormRulesMixin = {
         }
     },
 }
-// 分类参数
 export const paramsFormRulesMixin = {
     data() {
         return {

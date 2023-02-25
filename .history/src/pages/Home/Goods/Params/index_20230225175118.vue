@@ -16,7 +16,7 @@
                 :closable="false"
                 type="warning"
                 show-icon
-            >
+                >1
             </el-alert>
             <el-row class="cat_opt">
                 <span>选择商品分类: </span>
@@ -307,6 +307,7 @@ export default {
             } else {
                 this.onlyTableData = res.data
             }
+            console.log(res.data)
         },
         // 监听对话框的关闭事件
         addDialogClosed() {
@@ -397,6 +398,7 @@ export default {
         },
         // 文本框失去焦点和回车触发
         handleInputConfirm(row) {
+            console.log('ok')
             if (row.inputValue.trim().length === 0) {
                 row.inputValue = ''
                 row.inputVisible = false

@@ -32,8 +32,7 @@ import {
     Option,
     Cascader,
     Alert,
-    Tabs,
-    TabPane
+    Tabs
 } from 'element-ui'
 
 
@@ -68,4 +67,3 @@ Vue.use(Option)
 Vue.use(Cascader)
 Vue.use(Alert)
 Vue.use(Tabs)
-Vue.use(TabPane)

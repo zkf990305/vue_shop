@@ -6,7 +6,7 @@
                 >首页</el-breadcrumb-item
             >
             <el-breadcrumb-item>商品管理</el-breadcrumb-item>
-            <el-breadcrumb-item>分类参数</el-breadcrumb-item>
+            <el-breadcrumb-item>商品分类</el-breadcrumb-item>
         </el-breadcrumb>
         <!-- 卡片 -->
         <el-card>
@@ -222,9 +222,13 @@
 
 <script>
 import { paramsFormRulesMixin } from '@/common/mixin.js'
+import Breadcrumb from 'components/content/breadcrumb/Breadcrumb'
 export default {
     name: 'Params',
     mixins: [paramsFormRulesMixin],
+    components: {
+        Breadcrumb,
+    },
     data() {
         return {
             cataList: [],
@@ -307,6 +311,7 @@ export default {
             } else {
                 this.onlyTableData = res.data
             }
+            console.log(res.data)
         },
         // 监听对话框的关闭事件
         addDialogClosed() {
@@ -397,6 +402,7 @@ export default {
         },
         // 文本框失去焦点和回车触发
         handleInputConfirm(row) {
+            console.log('ok')
             if (row.inputValue.trim().length === 0) {
                 row.inputValue = ''
                 row.inputVisible = false

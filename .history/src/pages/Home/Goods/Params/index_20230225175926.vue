@@ -397,6 +397,7 @@ export default {
         },
         // 文本框失去焦点和回车触发
         handleInputConfirm(row) {
+            console.log('ok')
             if (row.inputValue.trim().length === 0) {
                 row.inputValue = ''
                 row.inputVisible = false

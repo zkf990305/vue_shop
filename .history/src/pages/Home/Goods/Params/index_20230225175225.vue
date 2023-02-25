@@ -13,7 +13,7 @@
             <!-- 头部警告区域 -->
             <el-alert
                 title="注意: 只允许为第三级分类设置相关参数!"
-                :closable="false"
+                :closable="true"
                 type="warning"
                 show-icon
             >
@@ -307,6 +307,7 @@ export default {
             } else {
                 this.onlyTableData = res.data
             }
+            console.log(res.data)
         },
         // 监听对话框的关闭事件
         addDialogClosed() {
@@ -397,6 +398,7 @@ export default {
         },
         // 文本框失去焦点和回车触发
         handleInputConfirm(row) {
+            console.log('ok')
             if (row.inputValue.trim().length === 0) {
                 row.inputValue = ''
                 row.inputVisible = false
