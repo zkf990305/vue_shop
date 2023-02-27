@@ -74,63 +74,21 @@
                             ></el-cascader>
                         </el-form-item>
                     </el-tab-pane>
-                    <el-tab-pane label="商品参数" name="1">
-                        <!-- 渲染表单的item项 -->
-                        <el-form-item
-                            :label="item.attr_name"
-                            v-for="item in manyTableData"
-                            :key="item.attr_id"
-                        >
-                            <!-- 复选框组 -->
-                            <el-checkbox-group v-model="item.attr_vals">
-                                <el-checkbox
-                                    border
-                                    :label="item"
-                                    v-for="(item, i) in item.attr_vals"
-                                    :key="i"
-                                    >{{ item }}</el-checkbox
-                                >
-                            </el-checkbox-group>
-                        </el-form-item>
-                    </el-tab-pane>
-                    <el-tab-pane label="商品属性" name="2">
-                        <el-form-item
-                            :label="item.attr_name"
-                            v-for="item in onlyTableData"
-                            :key="item.attr_id"
-                        >
-                            <el-input v-model="item.attr_vals"></el-input>
-                        </el-form-item>
-                    </el-tab-pane>
-                    <el-tab-pane label="商品图片" name="3">
-                        <!-- action 表示图片要上传到的后台API地址 -->
-                        <el-upload
-                            :action="uploadURL"
-                            :on-preview="handlePreview"
-                            :on-remove="handleRemove"
-                            list-type="picture"
-                            :headers="headersObj"
-                            :on-success="handleSuccess"
-                        >
-                            <el-button size="small" type="primary"
-                                >点击上传</el-button
-                            >
-                        </el-upload>
-                    </el-tab-pane>
+                    <el-tab-pane label="商品参数" name="1"
+                        >商品参数</el-tab-pane
+                    >
+                    <el-tab-pane label="商品属性" name="2"
+                        >商品属性</el-tab-pane
+                    >
+                    <el-tab-pane label="商品图片" name="3"
+                        >商品图片</el-tab-pane
+                    >
                     <el-tab-pane label="商品内容" name="4"
                         >商品内容</el-tab-pane
                     >
                 </el-tabs>
             </el-form>
         </el-card>
-        <!-- 图片预览 -->
-        <el-dialog
-            title="图片预览"
-            :visible.sync="previewDialogVisible"
-            width="30%"
-        >
-            <img :src="previewPath" alt="" class="perviewImg" />
-        </el-dialog>
     </div>
 </template>
 
@@ -162,32 +120,10 @@ export default {
                 value: 'cat_id',
                 children: 'children',
             },
-            // 动态参数列表数据
-            manyTableData: [],
-            // 静态参数列表数据
-            onlyTableData: [],
-            // 上传图片的URL地址
-            uploadURL: 'http://127.0.0.1:8888/api/private/v1/upload',
-            // 图片上传组件的headers请求头对象
-            headersObj: {
-                Authorization: window.sessionStorage.getItem('token'),
-            },
-            // 预览图片的路径
-            previewPath: '',
-            // 图片预览的对话框
-            previewDialogVisible: false,
         }
     },
     created() {
         this.getCateList()
-    },
-    computed: {
-        cateId() {
-            if (this.addForm.goods_cat.length === 3) {
-                return this.addForm.goods_cat[2]
-            }
-            return null
-        },
     },
     methods: {
         // 获取所有商品分类数据
@@ -219,66 +155,40 @@ export default {
             }
         },
         async tabClicked() {
-            // 证明访问的是动态列表
-            if (this.activeIndex === '1') {
-                const { data: res } = await this.$http.get(
-                    `categories/${this.cateId}/attributes`,
-                    {
-                        params: { sel: 'many' },
-                    }
-                )
-                if (res.meta.status !== 200) {
-                    return this.$message.error('获取动态列表失败!')
-                }
-                res.data.forEach(
-                    (item) =>
-                        (item.attr_vals =
-                            item.attr_vals.length === 0
-                                ? []
-                                : item.attr_vals.split(' '))
-                )
+      // 证明访问的是动态列表
+      if (this.activeIndex === '1') {
+        console.log('动态参数')
+        const { data: res } = await this.$http.get(
+          `categories/${this.cateId}/attributes`,
+          {
+            params: { sel: 'many' }
+          }
+        )
+        if (res.meta.status !== 200) {
+          return this.$message.error('获取动态列表失败!')
+        }
+        res.data.forEach(
+          item =>
+            (item.attr_vals =
+              item.attr_vals.length === 0 ? [] : item.attr_vals.split(' '))
+        )
+        // console.log(res)
+        this.manyTableData = res.data
+      }
+      if (this.activeIndex === '2') {
+        const { data: res } = await this.$http.get(
+          `categories/${this.cateId}/attributes`,
+          {
+            params: { sel: 'only' }
+          }
+        )
+        if (res.meta.status !== 200) {
+          return this.$message.error('获取静态列表失败!')
+        }
+        this.onlyTableData = res.data
+        console.log(this.onlyTableData)
+      }
 
-                this.manyTableData = res.data
-            }
-            if (this.activeIndex === '2') {
-                const { data: res } = await this.$http.get(
-                    `categories/${this.cateId}/attributes`,
-                    {
-                        params: { sel: 'only' },
-                    }
-                )
-                if (res.meta.status !== 200) {
-                    return this.$message.error('获取静态列表失败!')
-                }
-                this.onlyTableData = res.data
-            }
-        },
-        // 点击图片预览时触发
-        handlePreview(file) {
-            this.previewPath = file.response.data.url
-            this.previewDialogVisible = true
-            console.log('预览图片', file.response.data.url)
-        },
-        // 处理移除图片的操作
-        handleRemove(file) {
-            // 1. 获取将要删除的图片的临时路径
-            const filePath = file.response.data.tmp_path
-            // 2. 从 pics 数组中找到这个图片的对应的索引值
-            const index = this.addForm.pics.findIndex((x) => x.pic === filePath)
-            // 3. 调用数组的splice方法,把图片信息对象,从pics数组中移除
-            this.addForm.pics.splice(index, 1)
-            console.log('移除图片', file, this.addForm)
-        },
-        // 监听图片上传成功的事件
-        handleSuccess(resposne) {
-            // 1. 拼接得到一个图片信息对象
-            const picInfo = { pic: resposne.data.tmp_path }
-            // 2. 将图片信息对象 push 到 pics 数组中
-            this.addForm.pics.push(picInfo)
-            console.log(resposne)
-            console.log(this.addForm)
-        },
-    },
 }
 </script>
 

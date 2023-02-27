@@ -123,14 +123,6 @@
                 </el-tabs>
             </el-form>
         </el-card>
-        <!-- 图片预览 -->
-        <el-dialog
-            title="图片预览"
-            :visible.sync="previewDialogVisible"
-            width="30%"
-        >
-            <img :src="previewPath" alt="" class="perviewImg" />
-        </el-dialog>
     </div>
 </template>
 

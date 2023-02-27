@@ -131,6 +131,12 @@
         >
             <img :src="previewPath" alt="" class="perviewImg" />
         </el-dialog>
+        <el-image
+            style="width: 100px; height: 100px"
+            :src="url"
+            :preview-src-list="srcList"
+        >
+        </el-image>
     </div>
 </template>
 
