@@ -1,0 +1,40 @@
+/* 全局样式表 */
+html,
+body,
+#app {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    min-width: 1300px;
+}
+.icon {
+   width: 1em; height: 1em;
+   vertical-align: -0.15em;
+   fill: currentColor;
+   overflow: hidden;
+}
+.el-breadcrumb {
+  margin-bottom: 15px;
+  font-size: 12px;
+}
+.el-card {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12) !important;
+}
+.el-table {
+  margin-top: 15px;
+  font-size: 13px;
+}
+.el-pagination {
+  margin-top: 15px;
+}
+/* 取消级联选择器全屏显示 */
+.el-cascader-panel {
+  height: 250px;
+}
+/* 步骤条 */
+.el-steps {
+  margin: 15px 0;
+}
+.el-step__title {
+  font-size: 10px;
+}
