@@ -9,9 +9,6 @@ import './assets/fonts/iconfont.js'
 import './assets/css/global.css'
 // 导入富文本编辑器
 import VueQuillEditor from 'vue-quill-editor'
-import 'quill/dist/quill.core.css' // import styles
-import 'quill/dist/quill.snow.css' // for snow theme
-import 'quill/dist/quill.bubble.css' // for bubble theme
 
 import axios from 'axios'
 // 配置请求的根路径
@@ -25,9 +22,6 @@ axios.interceptors.request.use(config => {
 Vue.prototype.$http = axios
 
 Vue.config.productionTip = false
-
-// 将富文本编辑器注册为全局组件
-Vue.use(VueQuillEditor)
 
 // 全局时间过滤器
 Vue.filter('dataFormat', function (originVal) {

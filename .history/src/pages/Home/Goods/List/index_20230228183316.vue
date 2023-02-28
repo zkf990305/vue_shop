@@ -72,7 +72,7 @@
                         ></el-button>
                         <el-button
                             type="danger"
-                            @click="removeCate(scope.row.goods_id)"
+                            @click="removeCate(scope.row.cat_id)"
                             icon="el-icon-delete"
                             size="mini"
                         ></el-button>
@@ -126,7 +126,7 @@ export default {
                 return this.$message.error('获取商品列表失败！')
             }
             this.goodsList = res.data.goods
-
+            console.log(res.data)
             this.total = res.data.total
         },
         // 监听 pagesize 改变事件 每页显示的个数
@@ -153,7 +153,7 @@ export default {
                     type: 'warning',
                 }
             ).catch((err) => err)
-
+            console.log(confirmResult)
             if (confirmResult !== 'confirm') {
                 return this.$message.info('删除操作已取消!')
             }
@@ -162,7 +162,7 @@ export default {
                 return this.$message.error('删除失败!')
             }
             this.$message.success('删除成功!')
-            this.getGoodsList()
+            this.getGoofsList()
         },
     },
 }

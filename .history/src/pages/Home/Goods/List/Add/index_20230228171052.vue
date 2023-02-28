@@ -146,7 +146,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import { goodsAddFormRulesMixin } from '@/common/mixin.js'
 export default {
     mixins: [goodsAddFormRulesMixin],
@@ -215,6 +214,7 @@ export default {
             if (this.addForm.goods_cat.length !== 3) {
                 this.addForm.goods_cat = []
             }
+            console.log(this.addForm)
         },
         // 阻止标签页的切换
         beforeTabLeave(activeName, oldActiveName) {
@@ -294,9 +294,8 @@ export default {
                 if (!valid) {
                     return this.$message.error('请填写必要的表单项')
                 }
-                // 执行添加的业务逻辑 深拷贝
+                // 执行添加的业务逻辑
                 const form = _.cloneDeep(this.addForm)
-
                 form.goods_cat = form.goods_cat.join(',')
                 // 处理动态参数
                 this.manyTableData.forEach((item) => {
@@ -315,11 +314,11 @@ export default {
                     this.addForm.attrs.push(newInfo)
                 })
                 form.attrs = this.addForm.attrs
-
+                // console.log(form)
                 // 发起请求添加商品数据
                 // 商品的名称必须是唯一的
                 const { data: res } = await this.$http.post('goods', form)
-
+                console.log(res)
                 if (res.meta.status !== 201) {
                     return this.$message.error('添加商品失败!')
                 }
@@ -333,19 +332,5 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-/* 步骤条 */
-.el-steps {
-    margin: 15px 0;
-}
-.el-step__title {
-    font-size: 12px;
-}
-
-.perviewImg {
-    width: 100%;
-}
-.AddBtn {
-    margin-top: 15px;
-}
+<style>
 </style>

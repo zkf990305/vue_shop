@@ -26,9 +26,6 @@ Vue.prototype.$http = axios
 
 Vue.config.productionTip = false
 
-// 将富文本编辑器注册为全局组件
-Vue.use(VueQuillEditor)
-
 // 全局时间过滤器
 Vue.filter('dataFormat', function (originVal) {
   const dt = new Date(originVal)

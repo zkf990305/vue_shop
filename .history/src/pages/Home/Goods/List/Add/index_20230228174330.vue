@@ -146,7 +146,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import { goodsAddFormRulesMixin } from '@/common/mixin.js'
 export default {
     mixins: [goodsAddFormRulesMixin],
@@ -215,6 +214,7 @@ export default {
             if (this.addForm.goods_cat.length !== 3) {
                 this.addForm.goods_cat = []
             }
+            console.log(this.addForm)
         },
         // 阻止标签页的切换
         beforeTabLeave(activeName, oldActiveName) {
@@ -295,8 +295,8 @@ export default {
                     return this.$message.error('请填写必要的表单项')
                 }
                 // 执行添加的业务逻辑 深拷贝
-                const form = _.cloneDeep(this.addForm)
-
+                // const form = _.cloneDeep(this.addForm)
+                const form = JSON.parse(JSON.stringify(this.addForm))
                 form.goods_cat = form.goods_cat.join(',')
                 // 处理动态参数
                 this.manyTableData.forEach((item) => {
@@ -315,11 +315,11 @@ export default {
                     this.addForm.attrs.push(newInfo)
                 })
                 form.attrs = this.addForm.attrs
-
+                console.log(form)
                 // 发起请求添加商品数据
                 // 商品的名称必须是唯一的
                 const { data: res } = await this.$http.post('goods', form)
-
+                console.log(res)
                 if (res.meta.status !== 201) {
                     return this.$message.error('添加商品失败!')
                 }
@@ -328,6 +328,20 @@ export default {
                 // 不能直接做转换因为在 级联选择器 中双向绑定了 goods_cat 作为key
                 // this.addForm.goods_cat = this.addForm.goods_cat.join(',')
             })
+        },
+        //写函数
+        copyObj(obj) {
+            let newObj = {}
+            for (let key in obj) {
+                if (typeof obj[key] == 'object') {
+                    //如:key是wife,引用类型,那就递归
+                    newObj[key] = copyObj(obj[key])
+                } else {
+                    //基本类型,直接赋值
+                    newObj[key] = obj[key]
+                }
+            }
+            return newObj
         },
     },
 }

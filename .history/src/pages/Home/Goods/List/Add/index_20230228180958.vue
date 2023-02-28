@@ -156,9 +156,9 @@ export default {
             // 添加商品的表单数据对象
             addForm: {
                 goods_name: '',
-                goods_price: 0,
+                goods_price: '0',
                 goods_weight: 0,
-                goods_number: 0,
+                goods_number: '0',
                 // 商品所属的分类数组
                 goods_cat: [],
                 // 图片的数组
@@ -215,6 +215,7 @@ export default {
             if (this.addForm.goods_cat.length !== 3) {
                 this.addForm.goods_cat = []
             }
+            console.log(this.addForm)
         },
         // 阻止标签页的切换
         beforeTabLeave(activeName, oldActiveName) {
@@ -315,11 +316,11 @@ export default {
                     this.addForm.attrs.push(newInfo)
                 })
                 form.attrs = this.addForm.attrs
-
+                console.log(form)
                 // 发起请求添加商品数据
                 // 商品的名称必须是唯一的
                 const { data: res } = await this.$http.post('goods', form)
-
+                console.log(res)
                 if (res.meta.status !== 201) {
                     return this.$message.error('添加商品失败!')
                 }

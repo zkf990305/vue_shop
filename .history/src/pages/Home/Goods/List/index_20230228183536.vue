@@ -126,7 +126,7 @@ export default {
                 return this.$message.error('获取商品列表失败！')
             }
             this.goodsList = res.data.goods
-
+            console.log(res.data)
             this.total = res.data.total
         },
         // 监听 pagesize 改变事件 每页显示的个数
@@ -144,6 +144,7 @@ export default {
             this.$router.push('/goods/add')
         },
         async removeCate(id) {
+            console.log(id)
             const confirmResult = await this.$confirm(
                 '此操作将永久删除该文件, 是否继续?',
                 '删除',

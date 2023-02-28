@@ -123,7 +123,7 @@
                             ref="myQuillEditor"
                             v-model="addForm.goods_introduce"
                         />
-                        <!-- 添加按钮 -->
+                        <!--            添加按钮-->
                         <el-button
                             type="primary"
                             class="AddBtn"
@@ -146,7 +146,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import { goodsAddFormRulesMixin } from '@/common/mixin.js'
 export default {
     mixins: [goodsAddFormRulesMixin],
@@ -215,6 +214,7 @@ export default {
             if (this.addForm.goods_cat.length !== 3) {
                 this.addForm.goods_cat = []
             }
+            console.log(this.addForm)
         },
         // 阻止标签页的切换
         beforeTabLeave(activeName, oldActiveName) {
@@ -289,63 +289,9 @@ export default {
             console.log(resposne)
             console.log(this.addForm)
         },
-        addShop() {
-            this.$refs.addFormRef.validate(async (valid) => {
-                if (!valid) {
-                    return this.$message.error('请填写必要的表单项')
-                }
-                // 执行添加的业务逻辑 深拷贝
-                const form = _.cloneDeep(this.addForm)
-
-                form.goods_cat = form.goods_cat.join(',')
-                // 处理动态参数
-                this.manyTableData.forEach((item) => {
-                    const newInfo = {
-                        attr_id: item.attr_id,
-                        attr_vals: item.attr_vals,
-                    }
-                    this.addForm.attrs.push(newInfo)
-                })
-                // 处理静态参数
-                this.onlyTableData.forEach((item) => {
-                    const newInfo = {
-                        attr_id: item.attr_id,
-                        attr_vals: item.attr_vals,
-                    }
-                    this.addForm.attrs.push(newInfo)
-                })
-                form.attrs = this.addForm.attrs
-
-                // 发起请求添加商品数据
-                // 商品的名称必须是唯一的
-                const { data: res } = await this.$http.post('goods', form)
-
-                if (res.meta.status !== 201) {
-                    return this.$message.error('添加商品失败!')
-                }
-                this.$message.success('添加商品成功!')
-                this.$router.push('/goods')
-                // 不能直接做转换因为在 级联选择器 中双向绑定了 goods_cat 作为key
-                // this.addForm.goods_cat = this.addForm.goods_cat.join(',')
-            })
-        },
     },
 }
 </script>
 
-<style lang="less" scoped>
-/* 步骤条 */
-.el-steps {
-    margin: 15px 0;
-}
-.el-step__title {
-    font-size: 12px;
-}
-
-.perviewImg {
-    width: 100%;
-}
-.AddBtn {
-    margin-top: 15px;
-}
+<style>
 </style>

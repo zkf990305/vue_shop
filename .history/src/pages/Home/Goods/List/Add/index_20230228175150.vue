@@ -146,7 +146,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import { goodsAddFormRulesMixin } from '@/common/mixin.js'
 export default {
     mixins: [goodsAddFormRulesMixin],
@@ -215,6 +214,7 @@ export default {
             if (this.addForm.goods_cat.length !== 3) {
                 this.addForm.goods_cat = []
             }
+            console.log(this.addForm)
         },
         // 阻止标签页的切换
         beforeTabLeave(activeName, oldActiveName) {
@@ -289,14 +289,37 @@ export default {
             console.log(resposne)
             console.log(this.addForm)
         },
+        //写函数
+        deepClone(obj, hash = new WeakMap()) {
+      if (obj === null) return obj; // 如果是null或者undefined就不进行拷贝操作
+      if (obj instanceof Date) return new Date(obj);
+      if (obj instanceof RegExp) return new RegExp(obj);
+      // 可能是对象（包括函数）或者普通的值  如果是函数或者普通的值不需要深拷贝
+      if (typeof obj !== "object") return obj;
+      // 是对象的话就要进行深拷贝
+      if (hash.get(obj)) return hash.get(obj);
+
+      let cloneObj = new obj.constructor();
+      // 找到的是所属类原型上的constructor,而原型上的 constructor指向的是当前类本身
+      hash.set(obj, cloneObj);
+
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          // 实现一个递归拷贝
+          cloneObj[key] = deepClone(obj[key], hash);
+        }
+      }
+      return cloneObj;
+    }
+
         addShop() {
             this.$refs.addFormRef.validate(async (valid) => {
                 if (!valid) {
                     return this.$message.error('请填写必要的表单项')
                 }
                 // 执行添加的业务逻辑 深拷贝
-                const form = _.cloneDeep(this.addForm)
-
+                // const form = _.cloneDeep(this.addForm)
+                let form = copyObj(this.addForm)
                 form.goods_cat = form.goods_cat.join(',')
                 // 处理动态参数
                 this.manyTableData.forEach((item) => {
@@ -315,11 +338,11 @@ export default {
                     this.addForm.attrs.push(newInfo)
                 })
                 form.attrs = this.addForm.attrs
-
+                console.log(form)
                 // 发起请求添加商品数据
                 // 商品的名称必须是唯一的
                 const { data: res } = await this.$http.post('goods', form)
-
+                console.log(res)
                 if (res.meta.status !== 201) {
                     return this.$message.error('添加商品失败!')
                 }
