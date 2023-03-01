@@ -284,7 +284,6 @@ export const goodsAddFormRulesMixin = {
         }
     }
 }
-// 修改订单地址
 export const editOrdersFormRulesMinix = {
     data() {
         return {

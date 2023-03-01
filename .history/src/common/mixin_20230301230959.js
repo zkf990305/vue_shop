@@ -284,22 +284,12 @@ export const goodsAddFormRulesMixin = {
         }
     }
 }
-// 修改订单地址
 export const editOrdersFormRulesMinix = {
     data() {
         return {
             // 修改表单的验证规则
             addressFormRules: {
-                address1: [{
-                    required: true,
-                    message: '请选择省市区/县',
-                    trigger: 'blur'
-                }],
-                address2: [{
-                    required: true,
-                    message: '请填写详细地址',
-                    trigger: 'blur'
-                }]
+
             }
         }
     }

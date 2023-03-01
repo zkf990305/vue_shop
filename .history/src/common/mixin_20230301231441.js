@@ -285,7 +285,8 @@ export const goodsAddFormRulesMixin = {
     }
 }
 // 修改订单地址
-export const editOrdersFormRulesMinix = {
+export default
+const editOrdersFormRulesMinix = {
     data() {
         return {
             // 修改表单的验证规则
