@@ -55,9 +55,6 @@ const routes = [{
       }, {
         path: '/orders',
         component: Orders
-      }, {
-        path: '/reports',
-        component: Report
       }
     ]
   }
