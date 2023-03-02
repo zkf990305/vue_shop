@@ -4,7 +4,7 @@
         title="修改地址"
         :visible.sync="addressDialogVisible"
         @close="addressDialogClosed"
-        :before-close="handleAddClose"
+         :before-close="handleAddClose"
         width="50%"
     >
         <el-form
@@ -62,7 +62,7 @@ export default {
         handleAddClose() {
             this.$confirm('确认关闭？')
                 .then((_) => {
-                    this.changeEditAddressDialogVisible()
+                    this.changeAddCateDialogVisible()
                 })
                 .catch((_) => {})
         },
