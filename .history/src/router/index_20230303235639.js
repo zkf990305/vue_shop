@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-const Login = () => import( /* webpackChunkName: "login_home_welome" */ '../pages/User/Login/index.vue')
+const Login = () => import( /* webpackChunkName: "login_home_welome" */ 'components/login/Login')
 const Home = () => import( /* webpackChunkName: "login_home_welome" */ '../pages/Home/index.vue')
 const Welcome = () => import( /* webpackChunkName: "login_home_welome" */ '../pages/Home/Welcome/index.vue')
 
@@ -27,8 +27,8 @@ const Report = () => import( /* webpackChunkName: "Order_Report" */ '../pages/Ho
 // import GoodsList from "../pages/Home/Goods/List/index.vue"
 // import CateParams from "../pages/Home/Goods/Params/index.vue"
 // import AddGood from "../pages/Home/Goods/List/Add/index.vue"
-// import Orders from '../pages/Home/Orders/index.vue'
-// import Report from '../pages/Home/Report/index.vue'
+import Orders from '../pages/Home/Orders/index.vue'
+import Report from '../pages/Home/Report/index.vue'
 
 Vue.use(VueRouter)
 

@@ -16,9 +16,6 @@ module.exports = {
         "styleLibraryName": "theme-chalk"
       }
     ],
-    // 发布产品时候的插件数组
-    ...prodPlugins, // 这里...展开运算符，把上面定义的prodPlugins数组里面的每一项展开添加到这个plugins数组里面
-    '@babel/plugin-syntax-dynamic-import'
-
+    'transform-remove-console'
   ]
 }

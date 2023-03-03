@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-const Login = () => import( /* webpackChunkName: "login_home_welome" */ '../pages/User/Login/index.vue')
+const Login = () => import( /* webpackChunkName: "login_home_welome" */ 'components/login/Login')
 const Home = () => import( /* webpackChunkName: "login_home_welome" */ '../pages/Home/index.vue')
 const Welcome = () => import( /* webpackChunkName: "login_home_welome" */ '../pages/Home/Welcome/index.vue')
 
