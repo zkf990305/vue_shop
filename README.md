@@ -228,3 +228,238 @@ Vue.filter('dataFormat', function (originVal) {
 ```
 
 使用：`{{ scope.row.add_time | dataFormat }}`
+
+
+
+
+
+## 项目优化
+
+### 项目优化策略
+
+1. 生成打包报告
+2. 第三方库启用 CDN
+3. Element-UI 组件按需加载
+4. 路由懒加载
+5. 首页内容定制
+
+
+
+#### 1. 生成打包报告
+
+
+
+打包时，为了直观地发现项目中存在的问题，可以在打包时生成报告。生成报告的方式有两种：
+
+① 通过命令行参数的形式生成报告
+
+```shell
+// 通过 vue-cli 的命令选项可以生成打包报告
+// --report 选项可以生成 report.html 以帮助分析包内容
+npx vue-cli-service build --report
+```
+
+② 通过可视化的 UI 面板直接查看报告（<font color='red'> 推荐 </font>）
+
+​	在可视化的 UI 面板中，通过<font color='red'> 控制台 </font>和<font color='red'> 分析 </font>面板，可以方便的看到项目中存在的问题。
+
+
+
+#### 2. 通过 vue.config.js 修改 webpack 的默认配置
+
+
+
+通过 vue-cli 3.0 工具生成的项目，<font color="red"> 默认隐藏了所有 webpack 的配置项 </font>，目的是为了屏蔽项目的配置过程，让程序员把工作的重心，放到具体功能和业务逻辑的实现上。
+
+如果程序员有修改 webpack 默认配置的需求，可以在项目根目录中，按需创建 <font color="red"> vue.config.js </font> 这个配置文件，从而对项目的打包发布过程做自定义的配置（具体配置参考 https://cli.vuejs.org/zh/config/#vue-config-js ）。
+
+```javascript
+// vue.config.js
+
+// 这个文件中，应该导出一个包含了自定义配置选项的对象
+module.exports = {
+  // 选项...
+}
+```
+
+
+
+#### 3. 为开发模式与发布模式指定不同的打包入口
+
+
+
+默认情况下，Vue 项目的<font color="red"> 开发模式 </font>与<font color="red"> 发布模式 </font>，共用同一个打包的入口文件（即<font color="red"> src/main.js </font>）。为了将项目的开发过程与发布过程分离，我们可以为两种模式，各自指定打包的入口义件，即：
+
+① 开发模式的入口文件：<font color="red"> src/main-dev.js </font>
+
+② 发布模式的入口文件：<font color="red"> src/main-prod.js </font>
+
+
+
+#### 4. configureWebpack 和 chainWebpack
+
+
+
+在 vue.config.js 导出的配置对象中，新增 configureWebpack 或 chainWebpack 节点，来自定义 webpack 的打包配置。
+
+在这里，configureWebpack 和 chainWebpack 的作用相同，唯一的区别就是它们修改 webpack 配置的方式不同:
+① chainWebpack 通过链式编程的形式，来修改默认的 webpack 配置
+② configureWebpack 通过操作对象的形式，来修改默认的 webpack 配置
+
+两者具体的使用差异，可参考如下网址:
+https://cli.vuejs.org/zh/guide/webpack.html
+
+
+
+#### 5. 通过 chainWebpack 自定义打包入口
+
+
+
+代码示例如下：
+
+```javascript
+// vue.config.js
+module.exports = {
+  chainWebpack: config => {
+    config.when(process.env.NODE_ENV === 'production', config => {
+        config.entry('app').clear().add('./src/main-prod.js')
+    })
+    config.when(process.env.NODE_ENV === 'development', config => {
+        config.entry('app').clear().add('./src/main-dev.js')
+    })
+  }
+}
+```
+
+
+
+#### 6. 通过 externals 加载外部 CDN 资源
+
+
+
+默认情况下，通过 import 语法导入的第三方依赖包，最终会被打包合并到同一个文件中，从而导致打包成功后，单文件体积过大的问题。
+
+为了解决上述问题，可以通过 webpack 的 externals 节点，来配置并加载外部的 CDN 资源。凡是声明在 externals 中的第三方依赖包，都不会被打包。
+
+开发时直接下载引入：发布时把直接引入可以省的包，使用window全局的方式来查找，也就是说 CDN 挂载。通过CDN挂载的方式进行引用。
+
+具体配置代码如下：
+
+```javascript
+config.set('externals', {
+    vue: 'Vue',
+    'vue-router': 'VueRouter',
+    axios: 'axios',
+    lodash: '_',
+    echarts: 'echarts',
+    nprogress: 'NProgress',
+    'vue-quill-editor': 'VueQuillEditor',
+    jquery: '$'
+})
+```
+
+同时，需要在 public/index.html 文件的头部，添加如下的 CDN 资源引用：
+
+```html
+<!-- nprogress 的样式表文件 --> 
+<link rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+<!-- 富文本编辑器 的样式表文件 -->
+<link rel="stylesheet" href="https://cdn.staticfile.org/quill/1.3.7/quill.core.min.css" />
+<link rel="stylesheet" href="https://cdn.staticfile.org/quill/1.3.7/quill.snow.min.css" />
+<link rel="stylesheet" href="https://cdn.staticfile.org/quill/1.3.7/quill.bubble.min.css" />
+
+<script src="https://cdn.staticfile.org/vue/2.6.14/vue.min.js"></script>
+<script src="https://cdn.staticfile.org/vue-router/3.5.1/vue-router.min.js"></script>
+<script src="https://cdn.staticfile.org/axios/1.2.2/axios.min.js"></script>
+<script src="https://cdn.staticfile.org/lodash.js/4.17.11/lodash.min.js"></script>
+<script src="https://cdn.staticfile.org/echarts/5.4.1/echarts.min.js"></script>
+<script src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js"></script>
+<!-- 富文本编辑器的 js 文件 -->
+<script src="https://cdn.staticfile.org/quill/1.3.7/quill.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-quill-editor@3.0.6/dist/vue-quill-editor.js"></script>
+```
+
+
+
+#### 7. 通过 CDN 优化 ElementUI 的打包
+
+   
+
+   虽然在开发阶段，我们启用了 element-ui 组件的按需加载，尽可能的减少了打包的体积，但是那些被按需加载的组件，还是占用了较大的文件体积。此时，我们可以将 element-ui 中的组件，也通过 CDN 的形式来加载，这样能够进一步减小打包后的文件体积。
+
+   具体操作流程如下:
+   在 main-prod.js中，注释掉 element-ui 按需加载的代码
+   在 index.html 的头部区域中，通过 CDN 加载 element-ui 的 js 和 css 样式
+
+   ```html
+<!-- element-ui 的样式表文件 -->
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.13/theme-chalk/index.min.css" />
+<!-- element-ui 的 js 文件 -->
+<script src="https://cdn.staticfile.org/element-ui/2.15.13/index.js"></script>
+   ```
+
+   
+
+#### 8. 首页内容定制
+
+
+
+不同的打包环境下，首页内容可能会有所不同，我们可以通过插件的方式进行定制，插件配置如下：
+
+```javascript
+// 发布模式
+chainWebpack: config => {
+    config.when(process.env.NODE_ENV === 'production', config => {
+        config.plugin('html').tap(args => {
+            args[0].isProd = true
+            return args
+        })
+    })
+
+    // 开发模式
+    config.when(process.env.NODE_ENV === 'development', config => {
+        config.plugin('html').tap(args => {
+            args[0].isProd = false
+            return args
+        })
+    })
+```
+
+在 public/index.html 首页中，可以根据 isProd 的值，来决定如何渲染页面结构：
+
+```html
+<!-- 按需渲染页面的标题 -->
+<title><%= htmlWebpackPlugin.options.isProd ? '' : 'dev -' %>电商后台管理系统</title>
+<!-- 按需加载外部的 CDN 资源 -->
+<% if (htmlWebpackPlugin.options.isProd) {%>
+<!-- 通过 externals 加载的外部 CDN 资源 -->
+<% } %>
+```
+
+
+
+#### 9. 路由懒加载
+
+
+
+当打包构建应用时，JavaScript 包会变得非常大，影响页面加载。如果我们能把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这样就会更加高效。
+
+具体需要三步：
+
+① 安装 <font color="red"> @babel/plugin-syntax-dynamic-import </font>包。
+
+② 在 <font color="red"> babel.config.js </font> 配置文件中声明该插件。
+
+③ 将路由改为按需加载的形式，示例代码如下：
+
+```javascript
+const UserDetails = () =>
+  import(/* webpackChunkName: "group-user" */ './UserDetails.vue')
+const UserDashboard = () =>
+  import(/* webpackChunkName: "group-user" */ './UserDashboard.vue')
+const UserProfileEdit = () =>
+  import(/* webpackChunkName: "group-user" */ './UserProfileEdit.vue')
+```
+
+关于路由懒加载的详细文档，可参考如下网址:
+https://router.vuejs.org/zh/guide/advanced/lazy-loading.html
